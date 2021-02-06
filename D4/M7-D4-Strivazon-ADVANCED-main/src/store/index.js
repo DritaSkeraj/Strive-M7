@@ -21,9 +21,11 @@ const initialState = {
 // RIGHT
 // get the data beforehand, and dispatch the action with the data as the payload
 
-const bigReducer = combineReducers({ cart: cartReducer, user: userReducer })
+const bigReducer = combineReducers({ cart: cartReducer,
+                                     user: userReducer })
 // every sub-reducer is triggered at ANY action dispatching
 
 export default function configureStore() {
-  return createStore(bigReducer, initialState, composedEnhancer(applyMiddleware(thunk)))
+  return createStore(bigReducer, initialState, 
+    composedEnhancer(applyMiddleware(thunk)))
 }
