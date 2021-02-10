@@ -1,0 +1,8 @@
+.messages-wrapper{
+    width: 80%;
+    margin: 0 auto;
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding: 10px;
+    background: white;
+}
