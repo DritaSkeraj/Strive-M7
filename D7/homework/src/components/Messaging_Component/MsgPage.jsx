@@ -11,39 +11,8 @@ class MsgPage extends PureComponent {
     message: "",
     users: [],
     selectedUser: null,
-    user: {
-      username: "test",
-    },
+    user: null
   };
-
-  async componentDidMount() {
-    const connOpt = {
-      transports: ["websocket"],
-    };
-
-    const user = await this.fetchUser();
-    if (user !== undefined) {
-      this.setState({ user: user });
-    }
-
-    this.socket = io("https://striveschool-api.herokuapp.com/", connOpt);
-
-    this.socket.on("connect", () => console.log("Connected", this.socket.id));
-    this.socket.on("list", (users) => {
-        console.log('users:::::::', users)
-      this.setState({ users: [] });
-      let userNoDuplicate = [...new Set(users)];
-      this.setState({
-        users: this.state.users
-          .concat(userNoDuplicate)
-          .filter((x) => x !== this.state.user.username),
-      });
-    });
-    this.socket.emit("setUsername", {
-     // username: user.username,
-     username: {username: 'test'}
-    });
-  }
 
   fetchUser = async () => {
     try {
@@ -56,12 +25,44 @@ class MsgPage extends PureComponent {
         }
       );
       let parsedResponse = await response.json();
-      console.log("my usename............", parsedResponse);
+      console.log("me............", parsedResponse);
       this.setState({ user: parsedResponse });
     } catch (error) {
       console.log(error);
     }
   };
+
+  async componentDidMount() {
+    const connOpt = {
+      transports: ["websocket"],
+    };
+
+    const user = await this.fetchUser();
+    if (user !== undefined) {
+      //this.setState({ user: user });
+    } 
+
+    this.socket = io("https://striveschool-api.herokuapp.com/", connOpt);
+
+    this.socket.on("connect", () => console.log("Connected", this.socket.id));
+
+    this.socket.on("list", (users) => {
+      console.log('users:::::::', users)
+      this.setState({ users: [] });
+      let userNoDuplicate = [...new Set(users)];
+      this.setState({
+        users: this.state.users
+          .concat(userNoDuplicate)
+          .filter((x) => x !== this.state.user.username),
+      });
+    });
+
+
+    //this.socket.emit("setUsername", {
+     // username: this.state.user.username,
+     //username: {username: 'test'}
+    //});
+  }
 
   handleTxtOnChange = (e) => {
     this.setState({ message: e.target.value });
